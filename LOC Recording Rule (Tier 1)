@@ -118,14 +118,18 @@ try {
 try {
     $now = Get-Date
     $pfFiles = Get-ChildItem "C:\Windows\Prefetch" -Filter "*.pf"
+    $excludeList = @("RIOTCLIENTCRASHHANDLER.EXE", "SOLARA.EXE", "GET-GRAPHICS-OFFSETS64.EXE", "INJECT-HELPER64.EXE", "EPICWEBHELPER.EXE", "CMD.EXE", "SECHEALTHUI.EXE", "SECURITYHEALTHHOST.EXE", "W32TM.EXE", "PICKERHOST.EXE", "BOOTSTRAPPERNEW.EXE", "CONSENT.EXE")
     foreach ($pf in $pfFiles) {
-        $name = $pf.BaseName.ToUpper()
-        $lastWrite = $pf.LastWriteTime
-        $age = [math]::Round(($now - $lastWrite).TotalHours, 2)
-        if ($watchlist -contains "$name.EXE") {
-            $prefetchOutput += "WARNING: Suspicious prefetch file: $name | $age hours ago"
-        } else {
-            $prefetchOutput += "Detected: $name | $age hrs ago"
+        $fullBaseName = $pf.BaseName.ToUpper()
+        $exeName = ($fullBaseName -split '-')[0]
+        if ($exeName -notin $excludeList) {
+            $lastWrite = $pf.LastWriteTime
+            $age = [math]::Round(($now - $lastWrite).TotalHours, 2)
+            if ($watchlist -contains $fullBaseName) {
+                $prefetchOutput += "WARNING: Suspicious prefetch file: $fullBaseName | $age hours ago"
+            } else {
+                $prefetchOutput += "Detected: $fullBaseName | $age hrs ago"
+            }
         }
     }
 } catch {
