@@ -118,7 +118,7 @@ try {
 try {
     $now = Get-Date
     $pfFiles = Get-ChildItem "C:\Windows\Prefetch" -Filter "*.pf"
-    $excludeList = @("RIOTCLIENTCRASHHANDLER.EXE", "SOLARA.EXE", "GET-GRAPHICS-OFFSETS64.EXE", "INJECT-HELPER64.EXE", "EPICWEBHELPER.EXE", "CMD.EXE", "SECHEALTHUI.EXE", "SECURITYHEALTHHOST.EXE", "W32TM.EXE", "PICKERHOST.EXE", "BOOTSTRAPPERNEW.EXE", "CONSENT.EXE")
+    $excludeList = @("RIOTCLIENTCRASHHANDLER.EXE", "SOLARA.EXE", "GET-GRAPHICS-OFFSETS64.EXE", "INJECT-HELPER64.EXE", "EPICWEBHELPER.EXE", "CMD.EXE", "SECHEALTHUI.EXE", "SECURITYHEALTHHOST.EXE", "W32TM.EXE", "PICKERHOST.EXE", "BOOTSTRAPPERNEW.EXE", "CONSENT.EXE", "app", "App")
     foreach ($pf in $pfFiles) {
         $fullBaseName = $pf.BaseName.ToUpper()
         $exeName = ($fullBaseName -split '-')[0]
@@ -184,7 +184,7 @@ Start-Job {
         $form.Controls.Add($listBox)
 
         $seen = [System.Collections.Generic.HashSet[string]]::new()
-        $excludeList = @("RiotClientCrashHandler", "solara", "Solara", "get-graphics-offsets64", "inject-helper64", "EpicWebHelper", "cmd", "SecHealthUI", "SecurityHealthHost", "w32tm", "PickerHost", "BootstrapperNew", "consent")
+        $excludeList = @("RiotClientCrashHandler", "solara", "Solara", "get-graphics-offsets64", "inject-helper64", "EpicWebHelper", "cmd", "SecHealthUI", "SecurityHealthHost", "w32tm", "PickerHost", "BootstrapperNew", "consent", "app", "App")
 
         # Initial snapshot
         $initialProcs = Get-Process | Where-Object { $_.MainWindowTitle -or $_.ProcessName } | Sort-Object ProcessName -Unique
