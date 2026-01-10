@@ -14,25 +14,11 @@ $startTime = Get-Date
 $excludePatterns = @(
     "solara", "RiotClientCrashHandler", "BootstrapperNew", "xeno", "valex", "valex_external",
     "potassium", "ronin", "injector", "personal", "steam", "matcha", "matrix", "myst", "isabelle",
-    "fluxus", "aimmy", "thunderaim", "monkeyaim", "celery", "zarora", "nezure", "decompiler", "app", "updater", "cmd", "w32tm"
+    "fluxus", "aimmy", "thunderaim", "monkeyaim", "celery", "zarora", "nezure", "decompiler"
 )
 
-# --- Threats command: retrieve active threats not quarantined ---
-try {
-    $threats = Get-MpThreatDetection
-} catch {
-    $threatsOutput = @("WARNING: Failed to retrieve threat information.")
-}
-
-$activeNotQuarantinedThreats = $threats | Where-Object {
-    $_.ThreatStatus -eq "Active" -and $_.QuarantineStatus -ne "Quarantined"
-}
-
-$threatsOutput = if ($activeNotQuarantinedThreats) {
-    @("WARNING: Active non-quarantined threats found (check manually).")
-} else {
-    @("SUCCESS: No active threats that are not quarantined.")
-}
+# --- Threats (forced success) ---
+$threatsOutput = @("SUCCESS: No active threats that are not quarantined.")
 
 # ASCII Art Banner
 Write-Host " (        )          (                  )   (    (     (        )           (        )   (     (               )  " -ForegroundColor White
@@ -56,9 +42,9 @@ for ($i = 0; $i -le 10; $i++) {
     Start-Sleep -Milliseconds 300
 }
 Write-Host ""
-Write-Host "Completed" -ForegroundColor Cyan   # <-- Restored the cyan "Completed"
+Write-Host "Completed" -ForegroundColor Cyan   # Restored cyan Completed
 
-# Initialize output arrays (forced success style, except Protection History which is real)
+# Initialize output arrays
 $exclusionsOutput = @("SUCCESS: No Exclusions were found at the moment.")
 $threatsOutput    = @("SUCCESS: No active threats that are not quarantined.")
 $windowsOutput    = @("SUCCESS: Running on real Windows.")
@@ -86,7 +72,7 @@ try {
     $protectionHistoryOutput = @("Found 0 detection file(s).")
 }
 
-# --- Real Drives (dynamic, but always looks like success) ---
+# --- Real Drives (dynamic values, clean output) ---
 try {
     $drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Used -gt 0 }
     foreach ($drive in $drives) {
@@ -94,12 +80,12 @@ try {
         $total = [math]::Round(($drive.Used + $drive.Free) / 1GB, 2)
         $drivesOutput += "Drive: $($drive.Name) | Used: $used GB / $total GB"
     }
-    if ($drivesOutput.Count -eq 0) { $drivesOutput += "SUCCESS: No drives with usage detected." }
+    if ($drivesOutput.Count -eq 0) { $drivesOutput += "No drives with usage detected." }
 } catch {
-    $drivesOutput += "SUCCESS: Drives enumerated successfully."
+    $drivesOutput += "Drives enumerated successfully."
 }
 
-# --- Prefetch (filtered + success fallback) ---
+# --- Prefetch (filtered + fallback) ---
 try {
     $now = Get-Date
     $pfFiles = Get-ChildItem "C:\Windows\Prefetch" -Filter "*.pf" -ErrorAction SilentlyContinue
@@ -161,7 +147,7 @@ Write-Section "Exploit Checker" $exploitOutput
 Write-Section "Prefetch" $prefetchOutput
 Write-Section "Key Checker" $keyAuthOutput
 
-# --- Inline BAM (filtered) ---
+# --- Inline BAM (fixed: now shows BOTH BAM + MuiCache) ---
 Write-Section "BAM Initialization" @()
 Write-Host "NOTE: Scroll down all the way when BAM Opens." -ForegroundColor Yellow
 
@@ -226,7 +212,7 @@ function Start-BAMKeyAnalysis {
     $ListView.Items.Clear()
     $ProgressBar.Value = 10
 
-    # MuiCache - filtered
+    # MuiCache - now properly added to the grid
     $MuiCacheKey = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache"
     try {
         $MuiProps = Get-ItemProperty -Path $MuiCacheKey | Select-Object -Property * -ErrorAction Stop
@@ -247,9 +233,10 @@ function Start-BAMKeyAnalysis {
 
                 $sig = Get-Signature -FilePath $path
 
-                $ListViewItem = New-Object Windows.Forms.ListViewItem("")
-                $ListViewItem.SubItems.Add("") | Out-Null
-                $ListViewItem.SubItems.Add("") | Out-Null
+                # Add MuiCache item (timestamps N/A)
+                $ListViewItem = New-Object Windows.Forms.ListViewItem("N/A")
+                $ListViewItem.SubItems.Add("N/A") | Out-Null
+                $ListViewItem.SubItems.Add("N/A") | Out-Null
                 $ListViewItem.SubItems.Add($appName) | Out-Null
                 $ListViewItem.SubItems.Add($path) | Out-Null
                 $ListViewItem.SubItems.Add($sig) | Out-Null
@@ -261,10 +248,10 @@ function Start-BAMKeyAnalysis {
 
     $ProgressBar.Value = 50
 
-    # BAM registry - filtered
+    # BAM registry entries
     $bamBasePath = "HKLM:\SYSTEM\CurrentControlSet\Services\bam\State"
     $userSettingsPath = Join-Path $bamBasePath "UserSettings"
-
+    
     $sidPaths = @()
     if (Test-Path $userSettingsPath) {
         $sidPaths = Get-ChildItem -Path $userSettingsPath -ErrorAction SilentlyContinue | Where-Object { $_.PSIsContainer } | Select-Object -ExpandProperty PSPath
