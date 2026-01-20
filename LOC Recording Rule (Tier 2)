@@ -14,7 +14,7 @@ $startTime = Get-Date
 $excludePatterns = @(
     "solara", "RiotClientCrashHandler", "BootstrapperNew", "xeno", "valex", "valex_external",
     "potassium", "ronin", "injector", "personal", "steam", "matcha", "matrix", "myst", "isabelle",
-    "fluxus", "aimmy", "thunderaim", "monkeyaim", "celery", "zarora", "nezure", "decompiler"
+    "fluxus", "aimmy", "thunderaim", "monkeyaim", "celery", "zarora", "nezure", "decompiler", "velocity", "updater", "app.exe", “usermode", "consent", "cmd", "erto3e4rortoergn", "identity_helper", "bootstrappernew"   
 )
 
 # --- Threats (forced success) ---
@@ -403,3 +403,4 @@ Write-Host "Section Failures: $failures" -ForegroundColor Green
 Write-Host "Warnings: $warningsCount" -ForegroundColor Yellow
 Write-Host "Completed in $($duration.TotalSeconds) seconds." -ForegroundColor White
 Write-Host "Timestamp: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Blue
+
