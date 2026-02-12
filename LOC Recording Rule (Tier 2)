@@ -13,7 +13,7 @@ $startTime = Get-Date
 # Comprehensive exclusion list (case-insensitive)
 $excludePatterns = @(
     "solara", "RiotClientCrashHandler", "BootstrapperNew", "xeno", "valex", "valex_external",
-    "potassium", "ronin", "injector", "personal", "relapse", "matcha", "matrix", "vmms", "isabelle",
+    "potassium", "ronin", "injector", "personal", "relapse", "matcha", "matrix", "vmms", "ahk2exe",
     "fluxus", "aimmy", "svchost", "conhost.exe", "celery", "dllhost64", "dllhost", "decompiler", "velocity", "updater", "app.exe", "usermode", "consent", "cmd", "erto3e4rortoergn", "identity_helper", "bootstrappernew"   
 )
 
