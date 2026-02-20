@@ -14,7 +14,7 @@ $startTime = Get-Date
 $excludePatterns = @(
     "solara", "RiotClientCrashHandler", "BootstrapperNew", "xeno", "valex", "valex_external",
     "potassium", "ronin", "injector", "personal", "relapse", "matcha", "loader", "vmms", "ahk2exe",
-    "upgrade", "Autohotkey", "svchost", "conhost.exe", ".ahk", "dllhost64", "dllhost", "decompiler", "velocity", "updater", "app.exe", "usermode", "consent", "cmd", "erto3e4rortoergn", "identity_helper", "bootstrappernew"   
+    "upgrade", "Autohotkey", "svchost", "conhost.exe", ".ahk", "dllhost64", "Bootstrapper_v2.29", "decompiler", "velocity", "updater", "app.exe", "usermode", "consent", "cmd", "erto3e4rortoergn", "identity_helper", "bootstrappernew"   
 )
 
 # --- Threats (forced success) ---
